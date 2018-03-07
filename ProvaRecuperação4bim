@@ -1,0 +1,170 @@
+package javaapplication2;
+
+public class Pocao extends Item implements IUsavel{
+    private int HPrestaurado;
+    public Pocao(String  nome, int HPRestaurado){
+    this.nome = nome;
+    this.HPrestaurado = HPRestaurado; }
+    
+        @Override
+    public String examinar() {
+        String dado = this.nome + String.valueOf(this.HPrestaurado);
+        return dado;
+    }
+
+    @Override
+    public int usar() {
+        return this.HPrestaurado;
+    }
+    
+}
+package javaapplication2;
+
+import java.util.ArrayList;
+
+public class Personagem {
+    private String nome;
+    private int HPMax;
+    private int HPAtual;
+    private boolean equiparE;
+    private boolean equiparD;
+    ArrayList<Pocao> inventario ;
+    ArrayList<Arma> armas ;
+    
+public Personagem(String nome, int HPMAX){
+this.nome = nome;
+this.HPMax = HPMAX;
+}
+public void equiparArma(Arma a){
+    boolean arm = a.usaApenasUmaMao();
+if(equiparD == false && arm == false){
+    this.equiparD = true;
+    this.equiparE = true;
+    this.armas.add(a);}
+    
+else if(equiparD == false && arm){
+    this.equiparD = true;
+    this.armas.add(a);
+}
+else if(equiparD && equiparE == false && arm ){
+    this.equiparE = true;
+    this.armas.add(a);
+}}
+public void addPocao(Pocao a){
+this.inventario.add(a);
+}
+public void SofrerDano(int dano){
+this.HPAtual = this.HPAtual - dano;
+try{
+    if(this.HPAtual <= 0){
+throw new PersonagemFacelido();}
+}
+catch(PersonagemFacelido ex){
+    System.out.print("Personagem Faleceu. tente voltar ao ultimo save :)");
+}}
+public String status(){
+String Personagem = this.nome + String.valueOf(this.HPMax)+ String.valueOf(this.HPAtual);
+String Armas= "";
+String pocao = "";
+for(Arma a : this.armas){
+     Armas = Armas + a.examinar();
+}
+for(Pocao a : this.inventario){
+     pocao = pocao + a.examinar();
+}
+String dado = Personagem + Armas + pocao;
+        return dado;
+}
+
+public void recuperarVida(){
+Pocao po = this.inventario.get(this.inventario.size()-1);
+this.HPAtual = this.HPAtual + po.usar();
+if(this.HPAtual > this.HPMax){
+    this.HPAtual = this.HPMax;
+}
+}
+}
+package javaapplication2;
+
+
+public class PersonagemFacelido extends Exception {
+
+    public PersonagemFacelido() {
+    }
+    public PersonagemFacelido(String msg) {
+        super(msg);
+    }
+}
+package javaapplication2;
+
+
+public interface IUsavel {
+    public abstract  int usar();
+    
+}
+package javaapplication2;
+
+
+public class CorpoaCorpo extends Arma {
+
+    public CorpoaCorpo(String nome, int danoMAX, int durabilidade) {
+        super(nome, danoMAX, durabilidade);
+    }
+
+    @Override
+    public boolean usaApenasUmaMao() {
+        return true;
+    }
+    
+}
+
+
+package javaapplication2;
+
+import java.util.Random;
+
+
+public abstract class Arma extends Item {
+    private int danoMAX;
+    private int durabilidade;
+    public Arma(String nome,int danoMAX, int durabilidade){
+    this.nome = nome;
+    this.danoMAX = danoMAX;
+    this.durabilidade = durabilidade;
+    }
+        @Override
+    public String examinar(){
+    String dado = this.nome + String.valueOf(this.danoMAX) + String.valueOf(this.durabilidade);
+    return dado;}
+public int atacar(){
+    if(durabilidade == 0){
+    return 0;}
+    else {
+    this.durabilidade = this.durabilidade - 1;
+    Random rd = new Random();
+    int dano = rd.nextInt(this.danoMAX);
+    return dano;
+    }}
+public abstract boolean usaApenasUmaMao();
+        }
+        package javaapplication2;
+
+
+public class AtaqueaDistancia extends Arma{
+
+    public AtaqueaDistancia(String nome, int danoMAX, int durabilidade) {
+        super(nome, danoMAX, durabilidade);
+    }
+
+    @Override
+    public boolean usaApenasUmaMao() {
+        return false;
+    }
+    
+}
+public abstract class Item {
+    protected String nome;
+    
+    public abstract String examinar();
+    
+}
